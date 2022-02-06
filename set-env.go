@@ -2,17 +2,31 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"strings"
 	"syscall"
 )
 
+var boolReplace bool
+
 func main() {
+	boolReplace = true
 	var rootPath string
 
+	var replace string
 	flag.StringVar(&rootPath, "f", ".env", "file env")
+	flag.StringVar(&replace, "r", "true", "replace environment variables")
 	flag.Parse()
+
+	if replace != "true" && replace != "false" {
+		log.Fatalf("option -r must be %q or %q", "true", "false")
+	}
+
+	if replace == "false" {
+		boolReplace = false
+	}
 
 	file, err := os.ReadFile(rootPath)
 	if err != nil {
@@ -41,7 +55,11 @@ func main() {
 }
 
 func setEnv(key, val string) {
-	if os.Getenv(key) == "" {
-		os.Setenv(key, val)
+	before := os.Getenv(key)
+	if before == "" || boolReplace {
+		if before != val {
+			fmt.Printf("%s : Before = %q, After = %q\n", key, before, val)
+			os.Setenv(key, val)
+		}
 	}
 }

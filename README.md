@@ -9,7 +9,8 @@ go install github.com/ftamhar/set-env@latest
 
 ## Options
 ```
--f : Location of env file. Default ".env"
+-f : Location of env file. Default “.env”
+-r : Replace variables. Default “True”
 ```
 
 ## Usage
