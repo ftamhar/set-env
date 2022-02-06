@@ -16,7 +16,7 @@ func main() {
 
 	file, err := os.ReadFile(rootPath)
 	if err != nil {
-		log.Fatalf("\nfile %s not found\nplease set file with -f\nfor help: setEnv -h", rootPath)
+		log.Fatalf("\nfile %s not found\nplease set file with -f\nfor help: set-env -h", rootPath)
 	}
 
 	arrEnv := strings.Split(string(file), "\n")
