@@ -42,20 +42,16 @@ func main() {
 			continue
 		}
 
-		idxComment := strings.Index(v, "#")
-
-		// no comment on end env value
-		if idxComment == -1 {
-			setEnv(v[:idx], strings.Trim(v[idx+1:], " "))
-		} else if idxComment > idx { // have comment on end env value
-			setEnv(v[:idx], strings.Trim(v[idx+1:idxComment], " "))
-		}
+		setEnv(v[:idx], strings.Trim(v[idx+1:], " "))
 	}
 	syscall.Exec(os.Getenv("SHELL"), []string{os.Getenv("SHELL")}, syscall.Environ())
 }
 
 func setEnv(key, val string) {
 	before := os.Getenv(key)
+	if val[len(val)-1] == '"' && val[0] == '"' {
+		val = strings.Trim(val, "\"")
+	}
 	if before == "" || boolReplace {
 		if before != val {
 			fmt.Printf("%s : Before = %q, After = %q\n", key, before, val)
